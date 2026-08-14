@@ -1,0 +1,476 @@
+/* =============================================
+   Personal Expense Tracker
+   Black and white, minimal, interactive
+   ============================================= */
+
+   * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: Inter, Arial, system-ui, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  
+  /* ---- Typography ---- */
+  h1 { font-size: 1.4rem; font-weight: 600; }
+  h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; }
+  
+  /* ---- Utilities ---- */
+  .fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+  .slide-up {
+    animation: slideUp 0.4s ease-out forwards;
+  }
+  .slide-down {
+    animation: slideDown 0.4s ease-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* ---- Buttons ---- */
+  button {
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  button:active {
+    transform: scale(0.98);
+  }
+  
+  .btn-black {
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #000;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .btn-black:hover {
+    background-color: #222;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .btn-black:disabled {
+    background-color: #777;
+    border-color: #777;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .btn-outline {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  
+  .btn-outline:hover {
+    background-color: #f7f7f7;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  
+  /* ---- Form Elements ---- */
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #333;
+  }
+  
+  input, select, textarea {
+    font-family: inherit;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 10px;
+    width: 100%;
+    background-color: #fff;
+    color: #000;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  input:focus, select:focus {
+    border-color: #000;
+    box-shadow: 0 0 0 1px #000;
+  }
+  
+  .form-group { margin-bottom: 14px; }
+  
+  .field-error { font-size: 12px; color: #cc0000; margin-top: 4px; }
+  
+  .form-error, .form-success {
+    font-size: 13px;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .form-error {
+    color: #cc0000;
+    border: 1px solid #cc0000;
+    background-color: #fffafa;
+  }
+  
+  .form-success {
+    color: #000;
+    border: 1px solid #000;
+    background-color: #fafafa;
+  }
+  
+  /* ---- Cards ---- */
+  .card {
+    border: 1px solid #eaeaea;
+    border-radius: 6px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s ease;
+  }
+  
+  .card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  
+  /* ---- Header ---- */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    border-bottom: 1px solid #eee;
+    background-color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  .header-title { font-size: 1rem; font-weight: 600; }
+  
+  /* ---- Login Page ---- */
+  .login-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #fafafa;
+    padding: 20px;
+  }
+  
+  .login-box {
+    width: 100%;
+    max-width: 380px;
+    background: #fff;
+    padding: 32px;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+  
+  .login-box h1 { text-align: center; margin-bottom: 8px; font-size: 1.3rem; }
+  .login-subtitle { text-align: center; color: #666; font-size: 13px; margin-bottom: 28px; }
+  .login-box .btn-black { width: 100%; padding: 10px; margin-top: 8px; }
+  
+  /* ---- Dashboard Layout ---- */
+  .dashboard-page {
+    min-height: 100vh;
+    background-color: #fafafa;
+  }
+  
+  .dashboard-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+  
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  
+  @media (max-width: 850px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* ---- Monthly Summary ---- */
+  .monthly-card {
+    text-align: center;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  
+  .monthly-label {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #666;
+    margin-bottom: 8px;
+  }
+  
+  .monthly-amount {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #000;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  
+  /* ---- Calendar ---- */
+  .calendar-container {
+    padding: 20px;
+  }
+  
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  
+  .calendar-nav {
+    background: none;
+    border: 1px solid #eee;
+    font-size: 14px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    color: #333;
+  }
+  
+  .calendar-nav:hover {
+    background: #f0f0f0;
+  }
+  
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    text-align: center;
+  }
+  
+  .calendar-day-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    margin-bottom: 8px;
+  }
+  
+  .calendar-date {
+    position: relative;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    border: 1px solid transparent;
+  }
+  
+  .calendar-date:not(.empty):hover {
+    background-color: #f5f5f5;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+  
+  .calendar-date.today {
+    border-color: #ccc;
+    font-weight: 600;
+  }
+  
+  .calendar-date.selected {
+    background-color: #000 !important;
+    color: #fff;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .expense-dot {
+    position: absolute;
+    bottom: 4px;
+    width: 4px;
+    height: 4px;
+    background-color: #000;
+    border-radius: 50%;
+    animation: scaleIn 0.2s ease-out;
+  }
+  
+  .calendar-date.selected .expense-dot {
+    background-color: #fff;
+  }
+  
+  @keyframes scaleIn {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  
+  .calendar-month-transition {
+    animation: fadeSlide 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeSlide {
+    0% { opacity: 0.5; transform: scale(0.98); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  
+  /* ---- Daily Total ---- */
+  .daily-total-card {
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+  .daily-total-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .daily-total-amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  
+  /* ---- Expense List ---- */
+  .daily-expenses {
+    margin-bottom: 24px;
+  }
+  
+  .expense-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  
+  .expense-table th {
+    text-align: left;
+    padding: 10px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .expense-table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+  }
+  
+  .expense-row {
+    animation: fadeInRow 0.3s ease forwards;
+    opacity: 0;
+  }
+  
+  @keyframes fadeInRow {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  
+  .expense-row.deleting {
+    animation: deleteRow 0.3s ease forwards;
+  }
+  
+  @keyframes deleteRow {
+    to { opacity: 0; transform: translateX(20px); }
+  }
+  
+  .no-expenses {
+    padding: 24px 0;
+    color: #777;
+    font-size: 14px;
+  }
+  
+  /* ---- Expense Form Expandable ---- */
+  .add-expense-container {
+    margin-top: 16px;
+  }
+  
+  .expand-form-btn {
+    width: 100%;
+    padding: 12px;
+    border: 1px dashed #ccc;
+    background: transparent;
+    border-radius: 6px;
+    color: #333;
+    font-weight: 500;
+  }
+  
+  .expand-form-btn:hover {
+    background: #fcfcfc;
+    border-color: #000;
+  }
+  
+  .expense-form-card {
+    border: 1px solid #000;
+    border-radius: 6px;
+    padding: 20px;
+    background: #fff;
+    animation: expandIn 0.3s ease forwards;
+    transform-origin: top;
+  }
+  
+  @keyframes expandIn {
+    from { opacity: 0; transform: scaleY(0.95); }
+    to { opacity: 1; transform: scaleY(1); }
+  }
+  
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  
+  .form-actions button {
+    flex: 1;
+  }
+  
+  /* Accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
