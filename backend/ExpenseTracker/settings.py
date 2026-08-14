@@ -2,16 +2,33 @@
 Django settings for ExpenseTracker project.
 """
 
+import os
+import os
 from pathlib import Path
 from datetime import timedelta
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-expense-tracker-secret-key-change-in-production'
+# Load environment variables from .env file (so we don't need python-dotenv)
+env_path = BASE_DIR / '.env'
+if env_path.exists():
+    with open(env_path) as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith('#'):
+                key, val = line.split('=', 1)
+                os.environ.setdefault(key.strip(), val.strip())
 
-DEBUG = True
+# Secret key is now hidden and securely loaded from .env
+SECRET_KEY = os.environ.get('SECRET_KEY', 'fallback-insecure-key-only-for-dev')
 
-ALLOWED_HOSTS = ['*']
+# Debug defaults to False unless specifically enabled in .env
+DEBUG = os.environ.get('DEBUG', 'False').lower() in ('true', '1', 't')
+
+# ALLOWED_HOSTS parsed from comma-separated env var
+allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', '*')
+ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(',') if host.strip()]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -30,6 +47,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # Must be at the top
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Added for serving static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -58,11 +76,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ExpenseTracker.wsgi.application'
 
+# Configure Database with dj_database_url
+# In production on Render, this will automatically use the DATABASE_URL environment variable.
+# Locally, it will fall back to SQLite.
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -78,6 +99,10 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+# Use Whitenoise for efficient static file serving
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ─── Django REST Framework ─────────────────────────────────────────────────────
@@ -100,4 +125,13 @@ SIMPLE_JWT = {
 }
 
 # ─── CORS ─────────────────────────────────────────────────────────────────────
-CORS_ALLOW_ALL_ORIGINS = True  # Restrict to React URL in production
+# Read allowed origins from environment variable (comma separated), fallback to localhost for dev
+cors_env = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000')
+CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_env.split(',') if origin.strip()]
+
+# Allow credentials if needed
+CORS_ALLOW_CREDENTIALS = True
+
+# CSRF Trusted Origins (needed for some POST requests if not using JWT exclusively)
+csrf_env = os.environ.get('CSRF_TRUSTED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000')
+CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_env.split(',') if origin.strip()]

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://127.0.0.1:8000';
+// Read from Create React App environment variable, fallback to localhost for development
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
 
 // Create one central Axios instance to use across the whole app
 const api = axios.create({
