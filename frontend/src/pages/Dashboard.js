@@ -10,7 +10,7 @@ import DailyExpenseList from '../components/DailyExpenseList';
 import ExpenseForm from '../components/ExpenseForm';
 
 function Dashboard() {
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   // ----- STATE -----

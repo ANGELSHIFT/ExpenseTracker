@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 function Calendar({ currentMonth, selectedDate, expensesByDate, onSelectDate, onChangeMonth }) {
   const [animationClass, setAnimationClass] = useState('');
