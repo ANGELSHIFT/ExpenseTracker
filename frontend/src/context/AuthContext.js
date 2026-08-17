@@ -5,7 +5,7 @@ import axios from 'axios';
 const AuthContext = createContext(null);
 
 // Django API base URL
-const BASE_URL = 'http://127.0.0.1:8000';
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
 
 // AuthProvider wraps the whole app and makes auth data available everywhere
 export function AuthProvider({ children }) {
@@ -57,6 +57,30 @@ export function AuthProvider({ children }) {
     }
   }
 
+  // register() — calls Django register endpoint and automatically logs user in
+  async function register(username, password) {
+    try {
+      await axios.post(`${BASE_URL}/api/register/`, {
+        username,
+        password,
+      });
+      // Auto-login after successful registration
+      return await login(username, password);
+    } catch (err) {
+      const data = err.response?.data;
+      let msg = 'Registration failed.';
+      if (data?.username) {
+        msg = Array.isArray(data.username) ? data.username[0] : data.username;
+      } else if (data?.password) {
+        msg = Array.isArray(data.password) ? data.password[0] : data.password;
+      } else if (data?.detail) {
+        msg = data.detail;
+      }
+      return { success: false, error: msg };
+    }
+  }
+
+
   // logout() — clears all tokens
   function logout() {
     setAccessToken(null);
@@ -71,6 +95,7 @@ export function AuthProvider({ children }) {
     refreshToken,
     isAuthenticated,
     login,
+    register,
     logout,
     setAccessToken, // needed by the Axios interceptor to update the token
     BASE_URL,

@@ -4,10 +4,20 @@ from django.utils import timezone
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-
+from rest_framework import generics
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import Expense
-from .serializers import ExpenseSerializer
+from .serializers import ExpenseSerializer, RegisterSerializer
+
+
+class RegisterView(generics.CreateAPIView):
+    """
+    POST /api/register/
+    Public registration endpoint to create new user accounts.
+    """
+    serializer_class = RegisterSerializer
+    permission_classes = [AllowAny]
+
 
 
 class ExpenseViewSet(viewsets.ModelViewSet):
