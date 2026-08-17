@@ -3,7 +3,7 @@
 A full-stack interactive Personal Expense Tracker application built with **React** (Frontend) and **Django REST Framework** (Backend).
 
 ## 🚀 Live Demo
-- **Frontend App**: [https://expense-tracker-sd3r-kqrfs4b2z-angelmariajoy225-4047s-projects.vercel.app](https://expense-tracker-sd3r-kqrfs4b2z-angelmariajoy225-4047s-projects.vercel.app)
+- **Frontend App**: [https://expense-tracker-sd3r.vercel.app](https://expense-tracker-sd3r.vercel.app)
 - **Backend API**: [https://expense-tracker-api-lpil.onrender.com/api/](https://expense-tracker-api-lpil.onrender.com/api/)
 
 ---
