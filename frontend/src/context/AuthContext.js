@@ -69,16 +69,23 @@ export function AuthProvider({ children }) {
     } catch (err) {
       const data = err.response?.data;
       let msg = 'Registration failed.';
-      if (data?.username) {
+      if (typeof data === 'string') {
+        msg = data;
+      } else if (data?.username) {
         msg = Array.isArray(data.username) ? data.username[0] : data.username;
       } else if (data?.password) {
         msg = Array.isArray(data.password) ? data.password[0] : data.password;
+      } else if (data?.non_field_errors) {
+        msg = Array.isArray(data.non_field_errors) ? data.non_field_errors[0] : data.non_field_errors;
       } else if (data?.detail) {
         msg = data.detail;
+      } else if (err.message) {
+        msg = err.message;
       }
       return { success: false, error: msg };
     }
   }
+
 
 
   // logout() — clears all tokens

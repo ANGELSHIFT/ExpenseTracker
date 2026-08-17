@@ -39,9 +39,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['username', 'password']
 
     def validate_username(self, value):
-        if User.objects.filter(username__iexact=value).exists():
-            raise serializers.ValidationError("A user with that username already exists.")
-        return value
+        username = value.strip()
+        if ' ' in username:
+            raise serializers.ValidationError("Username cannot contain spaces. Use letters, numbers, or underscores (e.g. JoyKK or Joy_KK).")
+        if User.objects.filter(username__iexact=username).exists():
+            raise serializers.ValidationError("This username is already taken. Please choose a different one.")
+        return username
+
 
     def create(self, validated_data):
         user = User.objects.create_user(
